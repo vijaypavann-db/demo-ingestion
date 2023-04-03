@@ -69,23 +69,6 @@ forEachBatchWriterTask.add_option_value("do_insert", True)
 forEachBatchWriterTask.add_option_value("update_condition", "fact.source_order_detail_updation_date < src.source_order_detail_updation_date")
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 foreach_writer_for_multi_location_writer = PipelineNodeBuilder.build_custom_node(forEachBatchWriterTask)
 
 pipeline_name = "tata_poc_pipeline"
