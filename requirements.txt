@@ -1,0 +1,2 @@
+setuptools~=67.6.0
+pyspark==3.3.2
