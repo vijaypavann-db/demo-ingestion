@@ -2,10 +2,21 @@
 #  http://jenkins-ci.org/
 #  https://wiki.jenkins-ci.org/display/JENKINS/Administering+Jenkins
 
+.databricks
+.eggs
+.vscode
+com
 denv
 venv
-.eggs
-com
+typings
+pyspark_ingestion-1.0.dist-info
+derby.log
+
+# Local metastore
+derby_log
+metastore_db
+spark-warehouse
+
 #ignore all JENKINS_HOME except jobs directory, root xml config, and .gitignore file
 !/jobs
 !/.gitignore
@@ -15,7 +26,7 @@ com
 #note: git doesn't track folders, only file content
 jobs/**
 build
-dist/**
+dist
 *.egg-info
 !jobs/**/
 *.DS_STORE
@@ -31,5 +42,3 @@ jobs/**/*workspace
 
 #as a result only settings and job config.xml files in JENKINS_HOME will be tracked by git
 
-
-pyspark_ingestion-1.0.dist-info

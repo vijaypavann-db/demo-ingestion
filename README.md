@@ -16,6 +16,9 @@ Project to showcase/ demo the capabilities of pyspark-ingestion framework
       `export TOKEN=ghp_AU43sdfsdfsdfsdf;
       git clone https://oauth2:$TOKEN@github.com/vijaypavann-db/demo-ingestion.git`
 
+3. Authenticate PAT Token (as described in the <a href="https://docs.github.com/en/enterprise-cloud@latest/authentication/authenticating-with-saml-single-sign-on/authorizing-a-personal-access-token-for-use-with-saml-single-sign-on" target="new">link</a>)      
+
+
 ### * Create a Virtual Env [run  on Terminal]
 ```python
 pip3 install virtualenv
@@ -44,3 +47,8 @@ check-wheel-contents dist
 
 * Verify the Wheel(.whl) file [in dist/] is of correct format as below: 
 `{dist}-{version}(-{build})?-{python.version}-{os_platform}.whl`
+
+
+### Run Code locally for development / testing
+1. Install the module as below: 
+`pip install dist/demo_ingestion-1.0-py3-none-any.whl  [--force-reinstall]`

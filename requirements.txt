@@ -1,2 +1,6 @@
 setuptools~=67.6.0
 pyspark==3.3.2
+py4j==0.10.9.5
+wheel==0.38.4
+check-wheel-contents==0.4.0
+delta-spark==2.3.0

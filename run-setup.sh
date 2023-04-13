@@ -1,5 +1,4 @@
-pip install wheel
-pip install check-wheel-contents
+pip install --use-pep517 -r requirements.txt
 
 pip install dependencies/pyspark_ingestion-1.0-py3-none-any.whl  --upgrade --target .
 
