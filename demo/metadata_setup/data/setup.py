@@ -41,7 +41,7 @@ def insert_into_pipeline_options(pipeline_id, reader_configs, reader_options,
      writer_options = default_if_none(writer_options)
 
      return f"""INSERT INTO pipeline_options 
-                                    (id,
+                                    (run_id,
                                     pipeline_id,
                                     reader_configs,
                                     reader_options,
@@ -170,5 +170,5 @@ if __name__ == "__main__":
                            """
     df = spark.sql(pipeline_options_select)
     df.show()
-    print(df.head()["id"])
+    print(df.head()["run_id"])
     

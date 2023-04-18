@@ -11,17 +11,17 @@ from com.db.fw.etl.core.common.Constants import COMMON_CONSTANTS
 class PipelineUtils:
 
     metadata_db = COMMON_CONSTANTS.METADATA_DB
-    # TODO
-    pipeline_metadata_tbl = "pipeline_metadata"
-    pipeline_options_tbl = "pipeline_options"
+    
+    pipeline_metadata_tbl = COMMON_CONSTANTS.PIPELINE_METADATA_TABLE
+    pipeline_options_tbl = COMMON_CONSTANTS.PIPELINE_OPTIONS_TABLE
 
     def __init__(self):
         self.spark = SparkSession.builder.getOrCreate()
     
     def buildPipelineUsingRunId(self, run_id: str):
-        # TODO change id to run_id
+        
         options = (self.spark.read.table(f"{self.metadata_db}.{self.pipeline_options_tbl}")
-                        .filter(f"id == '{run_id}'") ).alias("opt")
+                        .filter(f"run_id == '{run_id}'") ).alias("opt")
         
         metadata = self.spark.read.table(f"{self.metadata_db}.{self.pipeline_metadata_tbl}").alias("met")
         
@@ -38,7 +38,7 @@ class PipelineUtils:
 
         # Pipeline Info       
         pipeline_id = pipeline_details["pipeline_id"]
-        run_id = pipeline_details["id"] # TODO change id to run_id
+        run_id = pipeline_details["run_id"]
 
         # Entity Info
         database = pipeline_details["db_name"]

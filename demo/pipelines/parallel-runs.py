@@ -3,8 +3,8 @@ import logging, threading, time, multiprocessing
 
 from com.db.fw.etl.core.pipeline.PipelineBuilder import *
 from com.db.fw.etl.core.common.Constants import COMMON_CONSTANTS
-# from com.db.fw.etl.core.pipeline.PipelineUtils import PipelineUtils
-from demo.pipelines.PipelineUtilsV1 import PipelineUtils
+from com.db.fw.etl.core.pipeline.PipelineUtils import PipelineUtils
+# from demo.pipelines.PipelineUtilsV1 import PipelineUtils
 
 class Runner:
 
@@ -29,14 +29,13 @@ class Runner:
         
         metadata = self.spark.read.table(f"{self.metadata_db}.{self.pipeline_metadata_tbl}").alias("met")
         
-        # TODO run_id
         pipeline_details = (metadata
                             .join(options, metadata["pipeline_id"] == options["pipeline_id"], "inner")
-                                    .select("id")
+                                    .select("run_id")
                                     .collect() )
 
         utils = PipelineUtils()
-        pipelines = [utils.buildPipelineUsingRunId(row["id"]) for row in pipeline_details]
+        pipelines = [utils.buildPipelineUsingRunId(row["run_id"]) for row in pipeline_details]
         print(pipelines)
         start_time = time.time()
 
