@@ -3,14 +3,15 @@ import logging, threading, time, multiprocessing
 
 from com.db.fw.etl.core.pipeline.PipelineBuilder import *
 from com.db.fw.etl.core.common.Constants import COMMON_CONSTANTS
-from com.db.fw.etl.core.pipeline.PipelineUtils import PipelineUtils
+# from com.db.fw.etl.core.pipeline.PipelineUtils import PipelineUtils
+from demo.pipelines.PipelineUtilsV1 import PipelineUtils
 
 class Runner:
 
     def __init__(self) -> None:
         self.metadata_db = COMMON_CONSTANTS.METADATA_DB
-        self.entity_tbl = COMMON_CONSTANTS.ENTITY_TABLE
-        self.entity_runs_tbl = COMMON_CONSTANTS.ENTITY_RUNS_TABLE
+        self.pipeline_metadata_tbl = COMMON_CONSTANTS.PIPELINE_METADATA_TABLE
+        self.pipeline_options_tbl = COMMON_CONSTANTS.PIPELINE_OPTIONS_TABLE
         self.spark = spark
 
     def run_pipeline(self, pipeline: Pipeline):
@@ -23,17 +24,20 @@ class Runner:
         pipeline.start()
 
     def run(self):
-        entity_runs = (self.spark.read.table(f"{self.metadata_db}.{self.entity_runs_tbl}") )
         
-        entities = self.spark.read.table(f"{self.metadata_db}.{self.entity_tbl}")
+        options = self.spark.read.table(f"{self.metadata_db}.{self.pipeline_options_tbl}").alias("opt")
         
-        pipeline_details = (entities.join(entity_runs, entities["id"] == entity_runs["entity_id"], "inner")
-                                    .select("run_id")
+        metadata = self.spark.read.table(f"{self.metadata_db}.{self.pipeline_metadata_tbl}").alias("met")
+        
+        # TODO run_id
+        pipeline_details = (metadata
+                            .join(options, metadata["pipeline_id"] == options["pipeline_id"], "inner")
+                                    .select("id")
                                     .collect() )
 
         utils = PipelineUtils()
-        run_ids = [utils.buildPipelineUsingRunId(row["run_id"]) for row in pipeline_details]
-        print(run_ids)
+        pipelines = [utils.buildPipelineUsingRunId(row["id"]) for row in pipeline_details]
+        print(pipelines)
         start_time = time.time()
 
         # TODO
@@ -41,7 +45,7 @@ class Runner:
         #     pool.map(self.run_pipeline, run_ids)
         
         with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
-            executor.map(self.run_pipeline, run_ids )
+            executor.map(self.run_pipeline, pipelines )
 
         print(f"Duration {time.time() - start_time} seconds")
 

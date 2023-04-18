@@ -5,7 +5,7 @@ setup(
     version='1.0',
     packages=['demo', 'demo.metadata_setup', 'demo.pipelines', 'demo.TataDigital', 'com', 'com.db', 'com.db.fw', 'com.db.fw.metadata', 'com.db.fw.etl', 'com.db.fw.etl.core',
               'com.db.fw.etl.core.common', 'com.db.fw.etl.core.writers', 'com.db.fw.etl.core.readers', 'com.db.fw.etl.core.samples',
-              'com.db.fw.etl.core.pipeline', 'com.db.fw.etl.core.exception', 'com.db.fw.etl.core.processor'],
+              'com.db.fw.etl.core.pipeline', 'com.db.fw.etl.core.exception', 'com.db.fw.etl.core.processors'],
     url='https://github.com/vijaypavann-db/demo-ingestion',
     license='',
     author='India Global Delivery Center Team',

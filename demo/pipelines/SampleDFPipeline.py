@@ -42,8 +42,9 @@ class SampleDFPipeline:
 
         pipeline =  ( PipelineBuilder(self.spark, pipeline_name, logger, pipline_id, io_service)
                         .add_node(reader)
-                        # .add_node_after(reader.name,processor)\
-                        .add_node_after(processor.name,writer).build()
+                        .add_node_after(reader.name, processor)
+                        .add_node_after(processor.name, writer)
+                        .build()
                     )
 
         pipline_id,name,meta_jsons = PipelineBuilder.get_json_dump(pipeline)
@@ -54,6 +55,9 @@ class SampleDFPipeline:
         pipeline.start()
 
 
+if __name__ == "__main__":
+    sample = SampleDFPipeline()
+    sample.run()
 
 
 
