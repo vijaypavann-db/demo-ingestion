@@ -1,14 +1,10 @@
 from databricks.sdk import WorkspaceClient
 import base64
 
-# w = WorkspaceClient(profile = "DEV")
-
-w = WorkspaceClient(host = "https://adb-984752964297111.11.azuredatabricks.net",
-                    token = "dapi69d3d035e76d456628ae5d0fea721859"
-                   )
+w = WorkspaceClient(profile = "DEV")
 
 file_path  = "/zzz_hello.txt"
-file_data  = "Hello, Databricks! Pavan done this"
+file_data  = "Hello, Databricks! "
 
 # The data must be base64-encoded before being written.
 file_data_base64 = base64.b64encode(file_data.encode())
