@@ -1,6 +1,7 @@
+pip install --upgrade pip
 pip install --use-pep517 -r requirements.txt
 
-pip install dependencies/pyspark_ingestion-1.0-py3-none-any.whl  --upgrade --target .
+pip install dependencies/pyspark_ingestion-1.1-py3-none-any.whl  --force-reinstall
 
 rm -r build
 rm -r dist

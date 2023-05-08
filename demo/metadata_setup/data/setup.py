@@ -90,13 +90,13 @@ if __name__ == "__main__":
    #    df = spark.sql(qry)
    #    df.show()
 
-   #  pipeline_metadata_select = f"""SELECT * FROM pipeline_metadata 
-   #                                  WHERE pipeline_name = 'load_emp' AND
-   #                                  db_name = 'demo_ingestion' AND
-   #                                  entity_name = 'EMP'
-   #                                  ORDER BY updated_at DESC 
-   #                                  LIMIT 1; 
-   #                                  """
+    pipeline_metadata_select = f"""SELECT * FROM pipeline_metadata 
+                                    WHERE pipeline_name = 'load_emp' AND
+                                    db_name = 'demo_ingestion' AND
+                                    entity_name = 'EMP'
+                                    ORDER BY updated_at DESC 
+                                    LIMIT 1; 
+                                    """
     
    #  pipeline_metadata_select = f"""SELECT * FROM pipeline_metadata 
    #                                  WHERE pipeline_name = 'load_readme' AND
@@ -107,13 +107,13 @@ if __name__ == "__main__":
    #                                  """
   
     
-    pipeline_metadata_select = f"""SELECT * FROM pipeline_metadata 
-                                    WHERE pipeline_name = 'load_lending_club' AND
-                                    db_name = 'demo_ingestion' AND
-                                    entity_name = 'lending_club'
-                                    ORDER BY updated_at DESC 
-                                    LIMIT 1; 
-                                    """
+#     pipeline_metadata_select = f"""SELECT * FROM pipeline_metadata 
+#                                     WHERE pipeline_name = 'load_lending_club' AND
+#                                     db_name = 'demo_ingestion' AND
+#                                     entity_name = 'lending_club'
+#                                     ORDER BY updated_at DESC 
+#                                     LIMIT 1; 
+#                                     """
   
     df = spark.sql(pipeline_metadata_select)
     df.show()
@@ -156,17 +156,16 @@ if __name__ == "__main__":
                                                             writer_options = None
                                                             )
     
-    print(pipeline_options_insert)
+#     print(pipeline_options_insert)
 
-    df = spark.sql(pipeline_options_insert)
-    df.show()
+#     df = spark.sql(pipeline_options_insert)
+#     df.show()
     
 
     pipeline_options_select = f"""SELECT * FROM pipeline_options 
                             WHERE pipeline_id = '{pipeline_id}'
                             AND is_active = True
-                           ORDER BY insert_time DESC 
-                           LIMIT 1; 
+                           ORDER BY insert_time DESC; 
                            """
     df = spark.sql(pipeline_options_select)
     df.show()
