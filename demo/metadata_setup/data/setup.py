@@ -1,4 +1,5 @@
-from pyspark.sql import SparkSession
+from databricks.connect import DatabricksSession
+from databricks.sdk.core import Config
 
 
 def insert_into_pipeline_metadata(pipeline_name, db_name, entity_name, pipeline_type) -> str:
@@ -69,7 +70,9 @@ def insert_into_pipeline_options(pipeline_id, reader_configs, reader_options,
 
 if __name__ == "__main__":
     
-    spark = SparkSession.builder.getOrCreate()
+    config = Config(profile = "DEV")
+    spark = DatabricksSession.builder.sdkConfig(config).getOrCreate()
+
 
     query = "USE default1" 
     df = spark.sql(query)
@@ -77,13 +80,15 @@ if __name__ == "__main__":
 
 
     # pipeline_metadata_insert = insert_into_pipeline_metadata("load_emp", "demo_ingestion", "EMP", "BATCH_LOAD")
-    pipeline_metadata_insert1 = insert_into_pipeline_metadata("load_readme", "demo_ingestion", "README", "BATCH_LOAD")
-    pipeline_metadata_insert2 = insert_into_pipeline_metadata("load_people", "demo_ingestion", "people", "BATCH_LOAD")
-    pipeline_metadata_insert3 = insert_into_pipeline_metadata("load_data_geo", "demo_ingestion", "data_geo", "BATCH_LOAD")
-    pipeline_metadata_insert4 = insert_into_pipeline_metadata("load_lending_club", "demo_ingestion", "lending_club", "BATCH_LOAD")
+    # pipeline_metadata_insert1 = insert_into_pipeline_metadata("load_readme", "demo_ingestion", "README", "BATCH_LOAD")
+    # pipeline_metadata_insert2 = insert_into_pipeline_metadata("load_people", "demo_ingestion", "people", "BATCH_LOAD")
+    # pipeline_metadata_insert3 = insert_into_pipeline_metadata("load_data_geo", "demo_ingestion", "data_geo", "BATCH_LOAD")
+    # pipeline_metadata_insert4 = insert_into_pipeline_metadata("load_lending_club", "demo_ingestion", "lending_club", "BATCH_LOAD")
    
-   #  df = spark.sql(pipeline_metadata_insert)
-   #  df.show()
+    pipeline_metadata_insert = insert_into_pipeline_metadata("load_kafka", "demo_ingestion", "kafka", "STREAM_LOAD")
+
+    # df = spark.sql(pipeline_metadata_insert)
+    # df.show()
 
    #  for qry in [pipeline_metadata_insert1, pipeline_metadata_insert2, pipeline_metadata_insert3, pipeline_metadata_insert4]:
    #    print(qry)
@@ -91,9 +96,9 @@ if __name__ == "__main__":
    #    df.show()
 
     pipeline_metadata_select = f"""SELECT * FROM pipeline_metadata 
-                                    WHERE pipeline_name = 'load_emp' AND
+                                    WHERE pipeline_name = 'load_kafka' AND
                                     db_name = 'demo_ingestion' AND
-                                    entity_name = 'EMP'
+                                    entity_name = 'kafka'
                                     ORDER BY updated_at DESC 
                                     LIMIT 1; 
                                     """
@@ -147,19 +152,34 @@ if __name__ == "__main__":
    #                                                          writer_options = None
    #                                                          )
 
+    # pipeline_options_insert = insert_into_pipeline_options( pipeline_id,
+    #                                                         reader_configs = """map("path", "/databricks-datasets/samples/lending_club/parquet/", "format", "parquet") """,
+    #                                                         reader_options = None,
+    #                                                         processor_configs = None, 
+    #                                                         processor_options = None, 
+    #                                                         writer_configs = """map("mode", "overwrite")""",
+    #                                                         writer_options = None
+    #                                                         )
+
+    
+    kafka_bootstrap_servers_plaintext = "b-2.oetrta.kpgu3r.c1.kafka.us-west-2.amazonaws.com:9094,b-1.oetrta.kpgu3r.c1.kafka.us-west-2.amazonaws.com:9094,b-3.oetrta.kpgu3r.c1.kafka.us-west-2.amazonaws.com:9094"
+    topic = "abhish_ijari_oetrta_kafka_test"
+    startingOffsets = "earliest"
+    checkpoint_location = "/tmp/load_kafka"
+    
     pipeline_options_insert = insert_into_pipeline_options( pipeline_id,
-                                                            reader_configs = """map("path", "/databricks-datasets/samples/lending_club/parquet/", "format", "parquet") """,
-                                                            reader_options = None,
-                                                            processor_configs = None, 
-                                                            processor_options = None, 
-                                                            writer_configs = """map("mode", "overwrite")""",
+                                                            reader_configs =  """map("format", "kafka")""",
+                                                            reader_options = f"""map("kafka.bootstrap.servers","{kafka_bootstrap_servers_plaintext}", "subscribe", "{topic}", "startingOffsets", "{startingOffsets}")""",
+                                                            processor_configs = None,
+                                                            processor_options = None,
+                                                            writer_configs = f"""map("mode", "append","checkpointLocation","{checkpoint_location}","writer_type", "stream")""",
                                                             writer_options = None
                                                             )
-    
-#     print(pipeline_options_insert)
+        
+    print(pipeline_options_insert)
 
-#     df = spark.sql(pipeline_options_insert)
-#     df.show()
+    df = spark.sql(pipeline_options_insert)
+    df.show()
     
 
     pipeline_options_select = f"""SELECT * FROM pipeline_options 

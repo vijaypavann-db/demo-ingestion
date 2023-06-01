@@ -1,14 +1,19 @@
-from pyspark.sql import SparkSession
+from databricks.connect import DatabricksSession
+from databricks.sdk.core import Config
+
 from com.db.fw.metadata.setup import MetadataSetup
 
 if __name__ == "__main__":
 
-    spark = SparkSession.builder.getOrCreate() 
+    config = Config(profile = "DEV")
+    spark = DatabricksSession.builder.sdkConfig(config).getOrCreate()
 
-    setup = MetadataSetup(spark, db_name = "default1", debug = True, dropTables = True)
+    # Add db_name = "<NEW_DB>", if you would like to change the default COMMON_CONSTANTS.METADATA_DB [demo_metadata]
+    setup = MetadataSetup(spark, debug = True, dropTables = True)
 
     # Create all Tables
     setup.run()
 
     # Run for a single table
-    # setup.createTable("pipeline_metadata")
+    # setup.createTable("pipeline_dependencies")
+    # setup.createTable("pipeline_tasks")
