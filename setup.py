@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='demo-ingestion',
     version='1.1',
-    packages=['demo', 'demo.metadata_setup', 'demo.pipelines', 'demo.TataDigital'],
+    packages=['demo', 'demo.metadata_setup', 'demo.pipelines'],
     url='https://github.com/vijaypavann-db/demo-ingestion',
     license='',
     author='India Global Delivery Center Team',

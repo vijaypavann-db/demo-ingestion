@@ -1,5 +1,5 @@
 pip install --upgrade pip
-pip install --use-pep517 -r requirements.txt
+pip install --use-pep517 -r requirements_local.txt
 
 pip install dependencies/pyspark_ingestion-1.1-py3-none-any.whl  --force-reinstall
 

@@ -1,0 +1,5 @@
+setuptools~=67.6.0
+wheel==0.38.4
+check-wheel-contents==0.4.0
+delta-spark>=2.3.0  # Or X.Y.* to match your cluster version.
+pyyaml==6.0

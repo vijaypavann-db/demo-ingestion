@@ -1,7 +1,8 @@
 from pyspark.sql import SparkSession
-from com.db.fw.metadata.setup import MetadataSetup
 from delta import configure_spark_with_delta_pip
 import getpass
+
+from com.db.fw.etl.core.pipeline.DeltaFromYaml import PrepareDelta
 from com.db.fw.etl.core.common.Constants import *
 
 if __name__ == "__main__":
@@ -18,11 +19,7 @@ if __name__ == "__main__":
 
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
 
-    # Add db_name = "<NEW_DB>", if you would like to change the default COMMON_CONSTANTS.METADATA_DB [demo_metadata]
-    setup = MetadataSetup(spark, debug = True, dropTables = True, localRun = True)
+    pipeline_metadata_path = "./resources/pipeline_metadata/local/1stload_local"
+    obj = PrepareDelta(spark, pipeline_metadata_path)
+    obj.start()
     
-    # Create all Tables
-    setup.run()
-
-    # Run for a single table
-    # setup.createTable("pipeline_metadata")

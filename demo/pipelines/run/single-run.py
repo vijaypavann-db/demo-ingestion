@@ -2,9 +2,7 @@ from databricks.connect import DatabricksSession
 from databricks.sdk.core import Config
 
 from com.db.fw.etl.core.pipeline.PipelineBuilder import *
-# from com.db.fw.etl.core.pipeline.PipelineUtils import PipelineUtils
-from demo.pipelines.PipelineUtilsV1 import PipelineUtils
-
+from com.db.fw.etl.core.pipeline.PipelineUtils import PipelineUtils
 
 if __name__ == "__main__":
 
