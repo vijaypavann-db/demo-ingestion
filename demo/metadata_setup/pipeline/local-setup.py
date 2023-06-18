@@ -19,7 +19,7 @@ if __name__ == "__main__":
 
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
 
-    pipeline_metadata_path = "./resources/pipeline_metadata/local/1stload_local"
+    pipeline_metadata_path = "./resources/pipeline_metadata/local/recovery_fail/"
     obj = PrepareDelta(spark, pipeline_metadata_path)
     obj.start()
     

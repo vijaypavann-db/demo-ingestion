@@ -1,0 +1,55 @@
+---
+pipeline_name: recovery_pipeline_fail
+tasks:
+  - task_name: emp_reader
+    task_configs:
+      type: reader
+      format: csv
+      path: ./resources/local_data/emp/inp.csv
+    task_options:
+      delimiter: '|'
+      header: true
+  - task_name: lending_club_reader
+    task_configs:
+      type: reader
+      format: parquet
+      path: ./resources/local_data/lending_club/
+  - task_name: emp_lc_processor
+    task_configs:
+      type: processor
+      custom_sql: select lcr.grade, lcr.count, emp.id, emp.name FROM 
+                  (select grade, count(*) AS count from lc_writer1 where grade is not null group by grade) lcr 
+                  INNER JOIN emp_reader emp
+                  ON lcr.grade = emp.grade
+  - task_name: lc_processor
+    task_configs:
+      type: processor
+      mask_columns: term, emp_title, emp_length
+      select_columns: loan_amnt, int_rate, term, emp_title, emp_length
+      limit: 100
+    task_options:
+      removeNulls: True
+  - task_name: emp_lc_writer
+    task_configs:
+      type: writer
+      mode: append
+      db_name: demo_poc_fail
+      table_name: lending_club_agg
+  - task_name: lc_writer
+    task_configs:
+      type: writer
+      mode: append
+      db_name: demo_poc_fail
+      table_name: lending_club
+  - task_name: lc_mask_sample
+    task_configs:
+      type: writer
+      mode: append
+      db_name: demo_poc_fail
+      table_name: lending_club_mask_sample
+dependencies:
+  lending_club_reader: lc_writer
+  emp_reader, lc_writer: emp_lc_processor
+  emp_lc_processor: emp_lc_writer
+  lc_writer: lc_processor
+  lc_processor: lc_mask_sample

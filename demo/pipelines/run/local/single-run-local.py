@@ -18,14 +18,15 @@ if __name__ == "__main__":
                )
 
     sparkSession = configure_spark_with_delta_pip(builder).getOrCreate()
+    sparkSession.sparkContext.setLogLevel("ERROR")
 
     utils = PipelineUtils(spark = sparkSession, localRun = True)
     # run_id = "4cae5de8-5771-47de-bc1d-eae0daf84ab8"
     # pipeline = utils.buildPipelineUsingRunId(run_id)
     
-    pipeline_id = "1964147365"
+    pipeline_id = "1159794704"
     pipeline = utils.buildPipeline(pipeline_id)
 
     # pipline_id, name, meta_jsons = PipelineBuilder.get_json_dump(pipeline)
     # print("*******", pipline_id, name, meta_jsons)
-    pipeline.start() # run_id = "a17991ee-fe03-11ed-8182-aa665a13f2b0"
+    pipeline.start(run_id = "30993636-0dfe-11ee-912b-acde48001122") # run_id = "30993636-0dfe-11ee-912b-acde48001122"
