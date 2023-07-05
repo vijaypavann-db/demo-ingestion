@@ -12,6 +12,6 @@ def get_secret_sdk():
     print(scopes, type(scopes))
     # repos_list = list(ws.repos.get())
     # # [print(repo) for repo in repos_list]
-    print(len(scopes))
+    print(f"len(scopes):: {len(scopes)} ")
 
 get_secret_sdk()
