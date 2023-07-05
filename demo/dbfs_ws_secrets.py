@@ -19,13 +19,16 @@ def get_secret_cli():
 
 
 def get_secret_sdk():
-  """ Access Secrets using `Databricks SDK`
-  """
+    """ Access Secrets using `Databricks SDK`
+    """
     from databricks.sdk import WorkspaceClient
 
     ws = WorkspaceClient(profile = "DEV")
 
     scopes = ws.secrets.list_scopes()
     print(scopes, type(scopes))
+
+    # repos_list = ws.repos.list()
+    # [print(repo) for repo in repos_list]
 
 get_secret_sdk()
