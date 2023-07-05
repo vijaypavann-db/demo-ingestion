@@ -1,0 +1,37 @@
+---
+pipeline_name: kafka_pipeline
+tasks:
+  - task_name: kafka_reader
+    task_configs:
+      type: reader
+      format: kafka
+    task_options:
+      kafka.bootstrap.server: "{kafka_bootstrap_servers}"
+      subscribe: "{confluentTopicName}"
+      kafka.security.protocol: SASL_SSL
+      startingOffsets: earliest
+      kafka.ssl.endpoint.identification.algorithm: https
+      kafka.sasl.mechanism: PLAIN
+      kafka.sasl.jaas.config: kafkashaded.org.apache.kafka.common.security.plain.PlainLoginModule required username='{username}' password='{password}'
+      dbtable: abhish_test
+  - task_name: data_processor
+    task_configs:
+      type: processor
+      mask_columns: name
+      select_columns: name, age
+      limit: 100
+    task_options:
+      removeNulls: True
+  - task_name: writer1
+    task_configs:
+      format: kafka
+    task_options:
+      type: writer
+      write_type: stream
+      mode: append
+      db_name: demo_ingestion
+      checkpointLocation: "{checkpoint_location}"
+      table_name: kafka_table
+dependencies:
+  rdbms_reader : data_processor
+  data_processor: writer1

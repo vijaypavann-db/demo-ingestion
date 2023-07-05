@@ -1,0 +1,30 @@
+---
+pipeline_name: lending_club_pipeline_dq_checks
+tasks:
+  - task_name: lending_club_reader
+    task_configs:
+      type: reader
+      format: parquet
+      path: /databricks-datasets/samples/lending_club/parquet/
+  - task_name: lc_processor
+    task_configs:
+      type: processor
+      mask_columns: term
+      select_columns: id, member_id, grade, desc, term
+      limit: 100
+    task_options:
+      removeNulls: 'True'
+  - task_name: lc_dq_processor
+    task_configs:
+      type: processor
+      data_quality_rules: ' null_threshold == {"grade": 1, "desc": 90} -||- not_null == id-,-member_id '
+  - task_name: lc_writer
+    task_configs:
+      type: writer
+      mode: append
+      db_name: lc_poc
+      table_name: lending_club_dq
+dependencies:
+  lending_club_reader: lc_processor
+  lc_processor: lc_dq_processor
+  lc_dq_processor: lc_writer

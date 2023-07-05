@@ -1,11 +1,11 @@
 ---
-pipeline_name: demo_pipeline
+pipeline_name: lending_club_pipeline
 tasks:
   - task_name: emp_reader
     task_configs:
       type: reader
       format: csv
-      path: ./resources/local_data/emp/inp.csv
+      path: /tmp/inp.csv
     task_options:
       delimiter: '|'
       header: true
@@ -13,7 +13,7 @@ tasks:
     task_configs:
       type: reader
       format: parquet
-      path: ./resources/local_data/lending_club/
+      path: /databricks-datasets/samples/lending_club/parquet/
   - task_name: emp_lc_processor
     task_configs:
       type: processor
@@ -25,24 +25,30 @@ tasks:
     task_configs:
       type: processor
       mask_columns: term, emp_title, emp_length
-      select_columns: loan_amnt, int_rate, term, emp_title, emp_length
+      select_columns: loan_amnt, int_rate, term, emp_title, emp_length, annual_inc
       limit: 100
     task_options:
       removeNulls: True
+  - task_name: lc_rule_processor
+    task_configs:
+      type: processor
+      rules: ' inc_category == {"annual_inc = 0": "NA", "annual_inc > 0 AND annual_inc <= 47000": "Middle", "annual_inc > 47000 AND annual_inc <= 65000": "Upper Middle", "annual_inc > 65000 AND annual_inc <= 92000": "Rich", "annual_inc > 92000": "HNI"} -||- loan_risk == {"loan_amnt = 0": "NA", "loan_amnt > 0 AND loan_amnt <= 1000": "Low Risk", "loan_amnt > 1000 AND loan_amnt <= 8000": "Medium Risk", "loan_amnt > 8000 AND loan_amnt <= 20000": "Risk", "loan_amnt > 20000": "High Risk"} '
+      data_rules: ' null_threshold == {"grade": 1, "desc": 90} -||- not_null == id-,-member_id '
   - task_name: emp_lc_writer
     task_configs:
       type: writer
       mode: append
-      db_name: demo_poc
+      db_name: lc_poc
       table_name: lending_club_agg
   - task_name: lc_writer
     task_configs:
       type: writer
       mode: append
-      db_name: demo_poc
+      db_name: lc_poc
       table_name: lending_club_mask_sample
 dependencies:
   emp_reader, lending_club_reader: emp_lc_processor
   lending_club_reader: lc_processor
   emp_lc_processor: emp_lc_writer
-  lc_processor: lc_writer
+  lc_processor: lc_rule_processor
+  lc_rule_processor: lc_writer

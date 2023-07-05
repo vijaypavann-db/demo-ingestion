@@ -7,7 +7,7 @@ tasks:
       format: rdbms
     task_options:
       url: jdbc:mysql://one-env-mysql.<HOST_NAME>.us-west-2.rds.amazonaws.com:3306/oetrta?user=<USER_NAME>&password=<PASSWORD>
-      dbtable: rahul_test
+      dbtable: user_test
   - task_name: data_processor
     task_configs:
       type: processor

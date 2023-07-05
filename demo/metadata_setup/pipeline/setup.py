@@ -9,7 +9,8 @@ if __name__ == "__main__":
     config = Config(profile = "DEV")
     spark = DatabricksSession.builder.sdkConfig(config).getOrCreate()
 
-    pipeline_metadata_path = "./resources/pipeline_metadata/remote/1stload"
+    # 1stload
+    pipeline_metadata_path = "./resources/pipeline_metadata/remote/lc_dq_load"
     obj = PrepareDelta(spark, pipeline_metadata_path)
     obj.start()
     

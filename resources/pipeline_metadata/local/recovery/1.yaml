@@ -7,7 +7,7 @@ tasks:
       format: csv
       path: ./resources/local_data/emp/inp.csv
     task_options:
-      delimiter: \|
+      delimiter: '|'
       header: true
   - task_name: lending_club_reader
     task_configs:

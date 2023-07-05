@@ -3,11 +3,24 @@ import base64
 
 w = WorkspaceClient(profile = "DEV")
 
-file_path  = "/zzz_hello.txt"
-file_data  = "Hello, Databricks! "
+""" Write the CSV data into DB Workspace using `Databricks SDK`
+"""
+
+dir_path = "/tmp"
+file_path  = f"{dir_path}/inp.csv"
+file_data  =  """id|name|grade
+0|VJ|A
+1|PV|B
+2|NV|C
+3|VN|D
+4|P1|E
+5|NNP|F
+""".strip()
 
 # The data must be base64-encoded before being written.
 file_data_base64 = base64.b64encode(file_data.encode())
+
+w.dbfs.mkdirs(dir_path)
 
 # Create the file.
 file_handle = w.dbfs.create(

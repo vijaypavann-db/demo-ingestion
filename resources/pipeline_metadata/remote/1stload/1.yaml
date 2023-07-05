@@ -7,14 +7,14 @@ tasks:
       format: csv
       path: /tmp/inp.csv
     task_options:
-      delimiter: \|
+      delimiter: '|'
       header: true
   - task_name: lending_club_reader
     task_configs:
       type: reader
       format: parquet
       path: /databricks-datasets/samples/lending_club/parquet/
-  - task_name: processor1
+  - task_name: emp_lc_processor
     task_configs:
       type: processor
       custom_sql: select lcr.grade, lcr.count, emp.id, emp.name FROM 
@@ -29,20 +29,20 @@ tasks:
       limit: 100
     task_options:
       removeNulls: True
-  - task_name: writer1
+  - task_name: emp_lc_writer
     task_configs:
       type: writer
       mode: append
       db_name: demo_poc
       table_name: lending_club_agg
-  - task_name: writer2
+  - task_name: lc_writer
     task_configs:
       type: writer
       mode: append
       db_name: demo_poc
       table_name: lending_club_mask_sample
 dependencies:
-  emp_reader, lending_club_reader: processor1
+  emp_reader, lending_club_reader: emp_lc_processor
   lending_club_reader: lc_processor
-  processor1: writer1
-  lc_processor: writer2
+  emp_lc_processor: emp_lc_writer
+  lc_processor: lc_writer
