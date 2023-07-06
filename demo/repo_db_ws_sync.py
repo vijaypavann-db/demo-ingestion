@@ -14,6 +14,6 @@ def update_repo():
     # id=3223104499255692 demo_ingestion
     [print(repo, repo.id) for repo in repos_list if repo.branch == "main"]  
 
-    ws.repos.update(repo_id=3223104499255692)
+    ws.repos.update(repo_id=3223104499255692, branch="main")
     
 update_repo()
