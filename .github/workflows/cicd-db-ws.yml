@@ -47,5 +47,5 @@ jobs:
       run: |
         cat ~/.databrickscfg
       
-    - name: Run Sample File
+    - name: Sync Git Repo Code to DB WS
       run: python demo/repo_db_ws_sync.py

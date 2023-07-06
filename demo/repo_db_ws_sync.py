@@ -1,17 +1,19 @@
 import os
 
 
-def get_secret_sdk():
+def update_repo():
     """ Access Secrets using `Databricks SDK`
     """
     from databricks.sdk import WorkspaceClient
 
     ws = WorkspaceClient()
 
-    scopes = ws.secrets.list_scopes()
-    print(scopes, type(scopes))
-    # repos_list = list(ws.repos.get())
-    # # [print(repo) for repo in repos_list]
-    print(f"len(scopes):: {len(scopes)} ")
+    path = "/Repos/vijay.pavan@databricks.com"
+    repos_list = ws.repos.list(path_prefix = path)
 
-get_secret_sdk()
+    # id=3223104499255692 demo_ingestion
+    [print(repo, repo.id) for repo in repos_list if repo.branch == "main"]  
+
+    ws.repos.update(repo_id=3223104499255692)
+    
+update_repo()
