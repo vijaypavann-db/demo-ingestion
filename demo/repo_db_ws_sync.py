@@ -2,7 +2,7 @@ import os
 
 
 def update_repo():
-    """ Access Secrets using `Databricks SDK`
+    """ Access Repos using `Databricks SDK`
     """
     from databricks.sdk import WorkspaceClient
 
@@ -15,5 +15,7 @@ def update_repo():
     [print(repo, repo.id) for repo in repos_list if repo.branch == "main"]  
 
     ws.repos.update(repo_id=3223104499255692, branch="main")
+
+    # ws.repos.create
     
 update_repo()
