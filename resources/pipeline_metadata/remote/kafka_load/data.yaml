@@ -1,4 +1,3 @@
----
 pipeline_name: kafka_pipeline
 tasks:
   - task_name: kafka_reader
@@ -6,14 +5,11 @@ tasks:
       type: reader
       format: kafka
     task_options:
-      kafka.bootstrap.server: "{kafka_bootstrap_servers}"
-      subscribe: "{confluentTopicName}"
-      kafka.security.protocol: SASL_SSL
+      kafka.bootstrap.server: "{kafka_bootstrap_servers_plaintext}"
+      subscribe: "{topic}"
+      kafka.security.protocol: SSL
       startingOffsets: earliest
-      kafka.ssl.endpoint.identification.algorithm: https
-      kafka.sasl.mechanism: PLAIN
-      kafka.sasl.jaas.config: kafkashaded.org.apache.kafka.common.security.plain.PlainLoginModule required username='{username}' password='{password}'
-      dbtable: sample_test_table
+      dbtable: user_test
   - task_name: data_processor
     task_configs:
       type: processor
@@ -22,7 +18,7 @@ tasks:
       limit: 100
     task_options:
       removeNulls: True
-  - task_name: writer1
+  - task_name: kafka_writer
     task_configs:
       format: kafka
     task_options:
@@ -32,6 +28,3 @@ tasks:
       db_name: demo_ingestion
       checkpointLocation: "{checkpoint_location}"
       table_name: kafka_table
-dependencies:
-  rdbms_reader : data_processor
-  data_processor: writer1
