@@ -1,51 +1,51 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+# # This workflow will install Python dependencies, run tests and lint with a single version of Python
+# # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
-name: Run a notebook in databricks on PRs Repo CICD DB WS Sync
+# name: Run a notebook in databricks on PRs Repo CICD DB WS Sync
 
-on:
-  push:
-    branches: [ "main" ]
+# on:
+#   push:
+#     branches: [ "main" ]
   
-permissions:
-  contents: read
+# permissions:
+#   contents: read
 
-jobs:
-  build:
+# jobs:
+#   build:
 
-    runs-on: ubuntu-latest
+#     runs-on: ubuntu-latest
 
-    env:
-      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-      DATABRICKS_TOKEN:  ${{ secrets.DATABRICKS_TOKEN }}
+#     env:
+#       DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+#       DATABRICKS_TOKEN:  ${{ secrets.DATABRICKS_TOKEN }}
 
-    steps:
-    - uses: actions/checkout@v3
+#     steps:
+#     - uses: actions/checkout@v3
 
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.10"
-        cache: 'pip'
+#     - name: Set up Python 3.10
+#       uses: actions/setup-python@v3
+#       with:
+#         python-version: "3.10"
+#         cache: 'pip'
 
-    - name: Display Python version
-      run: python -c "import sys; print(sys.version)"
+#     - name: Display Python version
+#       run: python -c "import sys; print(sys.version)"
       
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        pip list
+#     - name: Install dependencies
+#       run: |
+#         python -m pip install --upgrade pip
+#         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+#         pip list
     
-    - name: Prepare profile
-      run: |
-        echo "[DEFAULT]" >> ~/.databrickscfg
-        echo "host = $DATABRICKS_HOST" >> ~/.databrickscfg
-        echo "token = $DATABRICKS_TOKEN" >> ~/.databrickscfg
+#     - name: Prepare profile
+#       run: |
+#         echo "[DEFAULT]" >> ~/.databrickscfg
+#         echo "host = $DATABRICKS_HOST" >> ~/.databrickscfg
+#         echo "token = $DATABRICKS_TOKEN" >> ~/.databrickscfg
 
-    - name: Show profile
-      run: |
-        cat ~/.databrickscfg
+#     - name: Show profile
+#       run: |
+#         cat ~/.databrickscfg
       
-    - name: Sync Git Repo Code to DB WS
-      run: python demo/repo_db_ws_sync.py
+#     - name: Sync Git Repo Code to DB WS
+#       run: python demo/repo_db_ws_sync.py
